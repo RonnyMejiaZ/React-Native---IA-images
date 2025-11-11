@@ -1,39 +1,40 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { Link, Slot, Stack } from "expo-router";
+import { GestureHandlerRootView, Pressable } from "react-native-gesture-handler";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { styled } from "nativewind";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Logo } from "../components/Logo";
+import { CircleInfoIcon } from "../components/icons";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+const StyledPressable = styled(Pressable);
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
+export default function layout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <GestureHandlerRootView>
+      <SafeAreaView className="flex-1 bg-black">
+        <StatusBar style="light" />
+        <Stack
+          screenOptions={
+            {
+            headerStyle: {
+              backgroundColor: "black",
+              
+            },
+            headerTintColor: "yellow",
+            headerTitle: "",
+            headerLeft: () => <Logo />,
+            headerRight: () => (
+              <Link asChild href="/about">
+                <StyledPressable className={`active:opacity-50 mx-4`}>
+                  <CircleInfoIcon />
+                </StyledPressable>
+              </Link>
+            ),
+          }}
+        />
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 }

@@ -1,0 +1,193 @@
+ <View className="bg-black">
+   
+      {/* <View>
+        <Logo />
+      </View> */}
+      {/* <Link asChild href="/about">
+        <Pressable>
+        {({ pressed }) => (
+          <CircleInfoIcon style={{ opacity: pressed ? 0.5 : 1 }} />
+        )}
+        </Pressable>
+
+        <StyledPressable className={`active:opacity-50 mb-4`}>
+          <CircleInfoIcon />
+        </StyledPressable>
+      </Link> */}
+
+      {games.length === 0 ? (
+        <ActivityIndicator color={"#fff"} />
+      ) : (
+        <FlatList
+          data={games}
+          keyExtractor={(game) => game.slug}
+          renderItem={({ item, index }) => (
+            <AnimatedGameCard game={item} index={index} />
+          )}
+        />
+      )}
+    </View>
+
+
+  // useEffect(() => {
+  //   getLatestGames().then((res) => {
+  //     setGames(res);
+  //   });
+  // }, []);
+
+
+
+
+PARA CONSEGUIR DATOS DE UNA API RAPIDAMENTE---------------------------
+// @ts-ignore
+
+import {
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
+  Image,
+  View,
+} from "react-native";
+import { useEffect, useState } from "react";
+
+const ACCESS_KEY = "BhDen-UgVPwBYaFKw_FFIVnmxKRxEutjJMQrTKhBr_Y";
+
+export type UnsplashImage = {
+  id: string;
+  urls: {
+    small: string;
+  };
+  user: {
+    name: string;
+  };
+  height: number;
+  width: number;
+};
+const imageWidth = Dimensions.get("window").width / 2 - 20;
+
+export default function GameSlug() {
+  const [images, setImages] = useState<UnsplashImage[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`https://api.unsplash.com/photos?client_id=${ACCESS_KEY}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setImages(data);
+        setLoading(false);
+      });
+  }, []);
+
+  
+
+  return loading ? (
+    <ActivityIndicator color="#000" size={"large"} />
+  ) : (
+    
+    <FlatList
+      data={images}
+      keyExtractor={(item) => item.id}
+      numColumns={2}
+      contentContainerStyle={{ }}
+      renderItem={({ item, index }) => (
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Image
+            source={{ uri: item.urls.small }}
+            style={{
+              width: imageWidth,
+              height: (item.height / item.width) * imageWidth,
+              borderRadius: 10,
+              margin: 10,
+            }}
+            resizeMode="cover"
+          />
+        </View>
+      )}
+    />
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    PARA RECUPERAR JUEGOS---------------------------------------------------------
+    // type Game = {
+//   description: string;
+//   slug: string;
+//   releaseDate: string;
+//   score: number;
+//   title: string;
+//   image: string;
+// };
+
+// export default function detail() {
+//   const { gameslug } = useLocalSearchParams();
+//   const [gameInfo, setGameInfo] = useState<Game | null>(null);
+
+//   useEffect(() => {
+//     fetch(`https://fakestoreapi.com/products/${gameslug}`)
+//       .then((res) => res.json())
+//       .then((data) =>
+//         setGameInfo({
+//           description: data.description,
+//           slug: data.id.toString(),
+//           releaseDate: "2024",
+//           score: data.rating.rate,
+//           title: data.title,
+//           image: data.image,
+//         })
+//       );
+//   }, [gameslug]);
+
+//   return (
+//     <Screen>
+//       <Stack.Screen
+//         options={{
+//           headerStyle: { backgroundColor: "#ffee00" },
+//           headerTintColor: "black",
+//           headerLeft: undefined,
+//           headerTitle: "",
+//           headerRight: undefined,
+//         }}
+//       />
+//       <View>
+//         {gameInfo === null ? (
+//           <ActivityIndicator color={"#fff"} />
+//         ) : (
+//           <ScrollView>
+//             <Text className="text-white text-2xl">
+//               Detalle del juego {gameInfo.title}
+//             </Text>
+//             <Image
+//               source={{ uri: gameInfo.image }}
+//               style={{
+//                 width: 300,
+//                 height: 300,
+//                 borderRadius: 10,
+//                 marginBottom: 16,
+//               }}
+//             />
+//             <Text className="text-white">{gameInfo.description}</Text>
+//           </ScrollView>
+//         )}
+//       </View>
+//     </Screen>
+//   );
+// }
