@@ -42,4 +42,3 @@ export async function getLatestPrompts( page = Math.floor(Math.random() * 10) + 
     };
   });
 }
-

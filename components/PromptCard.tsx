@@ -60,7 +60,6 @@ function PromptCardComponent({ imageUri, slug }: AnimatedGameCardProps) {
           width: imageSize.width,
           height: imageSize.height,
           marginBottom: 8,
-          alignSelf: "center",
         }}
       >
         <Image
